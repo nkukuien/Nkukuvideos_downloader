@@ -1,7 +1,8 @@
+import os
 import streamlit as st
 from pytube import YouTube
 
-def download_video(url, itag, output_path):
+def download_video(url, itag):
     video = YouTube(url)
 
     st.write("Title:", video.title)
@@ -16,7 +17,8 @@ def download_video(url, itag, output_path):
 
     if stream is not None:
         st.write("\nDownloading video...")
-        stream.download(output_path=output_path)
+        download_path = os.path.join(os.path.expanduser("~"), "Downloads")
+        stream.download(output_path=download_path)
         st.write("Video downloaded successfully!")
     else:
         st.write("Invalid itag.")
@@ -31,17 +33,13 @@ def main():
     # Available quality input
     itag = st.text_input("Video Quality (itag)")
 
-    # Output directory input
-    output_path = st.text_input("Output Directory")
-
     # Download button
     if st.button("Download"):
-        if url and itag and output_path:
-            download_video(url, itag, output_path)
+        if url and itag:
+            download_video(url, itag)
         else:
-            st.write("Please provide URL, Video Quality (itag), and Output Directory.")
+            st.write("Please provide URL and Video Quality (itag).")
 
 # Run the web-based interface
 if __name__ == "__main__":
     main()
-
