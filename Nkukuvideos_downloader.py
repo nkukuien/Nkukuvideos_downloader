@@ -1,6 +1,14 @@
 import os
 import streamlit as st
 from pytube import YouTube
+import re
+
+def sanitize_filename(filename):
+    # Remove any special characters and spaces from the filename
+    filename = re.sub(r"[^\w\s-]", "", filename).strip()
+    # Replace spaces with underscores
+    filename = re.sub(r"\s+", "_", filename)
+    return filename
 
 def download_video(url, itag):
     video = YouTube(url)
@@ -14,7 +22,7 @@ def download_video(url, itag):
     if stream is not None:
         st.write("\nDownloading video...")
         download_path = os.path.join(os.path.expanduser("~"), "Downloads")
-        filename = f"{video.title}.mp4"
+        filename = sanitize_filename(video.title) + ".mp4"
         file_path = os.path.join(download_path, filename)
         stream.download(output_path=download_path, filename=filename)
         st.write("Video downloaded successfully!")
