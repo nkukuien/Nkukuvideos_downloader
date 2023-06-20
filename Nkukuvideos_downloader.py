@@ -8,18 +8,13 @@ def download_video(url, itag):
     st.write("Title:", video.title)
     st.write("Author:", video.author)
 
-    st.write("\nAvailable Streams:")
-    for stream in video.streams:
-        st.write(stream)
-
     itag = int(itag)
     stream = video.streams.get_by_itag(itag)
 
     if stream is not None:
         st.write("\nDownloading video...")
-        download_folder = "Downloads"
+        download_path = os.path.join(os.path.expanduser("~"), "Downloads")
         filename = f"{video.title}.mp4"
-        download_path = os.path.join(os.path.expanduser("~"), download_folder)
         file_path = os.path.join(download_path, filename)
         stream.download(output_path=download_path, filename=filename)
         st.write("Video downloaded successfully!")
